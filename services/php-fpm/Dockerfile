@@ -51,8 +51,8 @@ ENV PGID ${PGID}
 ENV PUSER ${PUSER}
 
 RUN set -x; \
-	addgroup -g ${PGID} -S ${PUSER} ; \
-	adduser -u ${PUID} -D -S -G ${PUSER} -s /bin/sh ${PUSER}
+	addgroup -g ${PGID} -S ${PUSER} || true; \
+	adduser -u ${PUID} -D -S -G ${PUSER} -s /bin/sh ${PUSER} || true
 
 RUN sed -i "s/user = www-data/user = '${PUSER}'/g" /usr/local/etc/php-fpm.d/www.conf
 RUN sed -i "s/group = www-data/group = '${PUSER}'/g" /usr/local/etc/php-fpm.d/www.conf
