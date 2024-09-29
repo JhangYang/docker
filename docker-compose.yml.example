@@ -35,13 +35,6 @@ services:
     ports:
       - "${NGINX_HOST_HTTP_PORT}:80"
       - "${NGINX_HOST_HTTPS_PORT}:443"
-      - "81:81"
-      - "82:82"
-      - "83:83"
-      - "85:85"
-      - "86:86"
-      - "88:88"
-      - "8081:8081"
     networks:
       - frontend
       - backend
@@ -220,8 +213,7 @@ services:
     networks:
       - frontend
       - backend
-    working_dir: ${APP_CODE_PATH_CONTAINER}/rongxin
-    # command: sh -c "npm create vite@latest ${REACT_APP_NAME} -- --template react-ts && cd ${REACT_APP_NAME} && npm install -D tailwindcss postcss autoprefixer && npx tailwindcss init -p"
+    working_dir: ${APP_CODE_PATH_CONTAINER}
     command: sh -c "npm install -D tailwindcss postcss autoprefixer @tailwindcss/forms tailwind-scrollbar prettier prettier-plugin-tailwindcss @shufo/prettier-plugin-blade && npx tailwindcss init -p && npm run dev"
     restart: unless-stopped
     profiles:

@@ -1,19 +1,21 @@
 # What's inside
 ##### For dev, prod
- - nginx
- - php-fpm
- - mariadb
+ - nginx: stable-alpine
+ - php-fpm: {version=8.3}-alpine
+ - mariadb: {version=latest}
  - phpmyadmin
- - redis
- - react
+ - redis: alpine
+ - react: {version=current}-alpine
 ##### For tool
- - composer
- - npm
+ - composer: from the same as `php-fpm`
+ - npm: {version=current}-alpine
  - mailhog
 ##### For laravel
  - laravel horizon
  - laravel schedule
  - laravel echo server
+
+
 
 # Environment
  - Ubuntu 22.04 LTS
@@ -88,7 +90,7 @@ Then, run as
 > docker compose run --rm composer update
 ```
 
-If you prefer, you also can enter the `php-fpm` container.
+If you prefer, you also can enter the `php-fpm` container to use `composer` command.
 ```
 > docker compose exec php-fpm /bin/sh
 

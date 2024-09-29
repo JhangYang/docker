@@ -1,4 +1,6 @@
 .env
+.yml
 logs/*
 app/*
 data/*
+.vscode/*
