@@ -219,7 +219,7 @@ services:
       - "5173:5173"
     networks:
       - frontend
-    working_dir: ${APP_CODE_PATH_CONTAINER}
+    working_dir: ${APP_CODE_PATH_CONTAINER}/${APP_NAME}
     command: sh -c "npm install -D tailwindcss postcss autoprefixer @tailwindcss/forms tailwind-scrollbar prettier prettier-plugin-tailwindcss @shufo/prettier-plugin-blade && npx tailwindcss init -p && npm run dev"
     restart: unless-stopped
     profiles:
@@ -233,11 +233,12 @@ services:
     build:
       context: ./services/npm
       args:
-        - NODE_VERSION=${NODE_VERSION}
+        - NODE_VERSION=${NODE_VERSION}/${APP_NAME}
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
     networks:
       - frontend
+    working_dir: ${APP_CODE_PATH_CONTAINER}
     entrypoint: [ "npm" ]
     profiles:
       - npm
