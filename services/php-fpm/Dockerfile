@@ -4,7 +4,6 @@ FROM php:${PHP_VERSION}-fpm
 
 RUN set -eux; \
 	apt-get update && apt-get install -y --no-install-recommends \
-	curl \
 	ca-certificates \
 	apt-transport-https \
 	build-essential \
@@ -18,7 +17,6 @@ RUN set -eux; \
 	libfreetype6-dev \
 	autoconf \
 	gnupg2 \
-	unixodbc-dev \
 	libssl-dev \
 	libssh2-1-dev \
 	unzip \
@@ -40,15 +38,27 @@ RUN set -eux; \
 	&& rm -rf /var/lib/apt/lists/*
 
 #SQL Server
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-	&& curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
+RUN set -eux; \ 
+	curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o
 
-RUN apt-get update \
-	&& ACCEPT_EULA=Y apt-get install -y msodbcsql17 \
-	&& apt-get install -y \
+RUN curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list | tee /etc/apt/sources.list.d/mssql-release.list
+
+RUN apt update && ACCEPT_EULA=Y apt-get install -y msodbcsql18 mssql-tools18 unixodbc-dev \
+	&& echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc \
+	&& source ~/.bashrc \
 	&& pecl install sqlsrv pdo_sqlsrv \
-	&& docker-php-ext-enable sqlsrv pdo_sqlsrv \
-	&& apt-get clean
+	&& docker-php-ext-enable sqlsrv pdo_sqlsrv
+
+# curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+# && curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+# && apt-get update \
+# && ACCEPT_EULA=Y apt-get install -y \
+# msodbcsql18 \
+# mssql-tools18 \
+# unixodbc-dev \
+# && pecl install sqlsrv pdo_sqlsrv \
+# && docker-php-ext-enable sqlsrv pdo_sqlsrv \
+# && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY ./opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 COPY ./laravel.ini /usr/local/etc/php/conf.d
