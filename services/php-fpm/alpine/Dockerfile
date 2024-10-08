@@ -1,23 +1,22 @@
 ARG PHP_VERSION
 
-FROM php:${PHP_VERSION}-fpm
+FROM php:${PHP_VERSION}-fpm-alpine
 
 RUN set -eux; \
-	apt-get update && apt-get install -y --no-install-recommends \
+	apk --update --no-cache add \
 	ca-certificates \
-	build-essential \
-	libicu-dev \
-	zlib1g-dev \
+	build-base \
+	icu-dev \
+	zlib \
 	libzip-dev \
 	libxml2-dev \
-	libjpeg-dev \
+	libjpeg-turbo-dev \
 	libpng-dev \
 	libwebp-dev \
-	libfreetype6-dev \
+	freetype-dev \
 	autoconf \
-	gnupg2 \
-	libssl-dev \
-	libssh2-1-dev \
+	openssl-dev \
+	libssh2-dev \
 	&& docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd \
 	&& docker-php-ext-configure intl \
 	&& docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype \
@@ -33,20 +32,9 @@ RUN set -eux; \
 	# SSH2
 	&& pecl install -a ssh2-1.3.1 \
 	&& docker-php-ext-enable ssh2 \
-	&& rm -rf /var/lib/apt/lists/*
-
-#SQL Server
-RUN set -eux; \ 
-	curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-	&& curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list \
-	&& apt-get update \
-	&& ACCEPT_EULA=Y apt-get install -y \
-	msodbcsql18 \
-	mssql-tools18 \
-	unixodbc-dev \
-	&& pecl install sqlsrv pdo_sqlsrv \
-	&& docker-php-ext-enable sqlsrv pdo_sqlsrv \
-	&& apt-get clean && rm -rf /var/lib/apt/lists/*
+	# Clean cache
+	&& apk del --purge build-base autoconf \
+	&& rm -rf /var/cache/apk/*
 
 COPY ./opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 COPY ./laravel.ini /usr/local/etc/php/conf.d

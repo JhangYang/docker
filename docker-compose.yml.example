@@ -49,6 +49,34 @@ services:
       - frontend
       - backend
 
+  php-fpm-alpine:
+    container_name: php-alpine
+    build:
+      context: ./services/php-fpm/alpine
+      args:
+        - PHP_VERSION=${PHP_VERSION}
+        - PUSER=${PUSER}
+        - PUID=${PUID}
+        - PGID=${PGID}
+        - http_proxy
+        - https_proxy
+        - no_proxy
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+      - ./services/php-fpm/php${PHP_VERSION}.ini:/usr/local/etc/php/php.ini
+    expose:
+      - "9000"
+    networks:
+      - backend
+    extra_hosts:
+      - "dockerhost:${DOCKER_HOST_IP}"
+    restart: unless-stopped
+    profiles:
+      - php-fpm
+      - dev
+      - prod
+      - backend
+
   php-fpm:
     container_name: php
     build:
