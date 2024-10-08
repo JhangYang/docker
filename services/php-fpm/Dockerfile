@@ -47,7 +47,7 @@ RUN apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql18 mssql-tools18
 	&& echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc
 
 RUN pecl install sqlsrv pdo_sqlsrv \
-	&& docker-php-ext-enable sqlsrv pdo_sqlsrvF
+	&& docker-php-ext-enable sqlsrv pdo_sqlsrv
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
