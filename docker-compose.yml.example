@@ -72,7 +72,7 @@ services:
       - "dockerhost:${DOCKER_HOST_IP}"
     restart: unless-stopped
     profiles:
-      - php-fpm
+      - php-fpm-alpine
       - dev
       - prod
       - backend

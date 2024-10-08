@@ -19,6 +19,7 @@ RUN set -eux; \
 	gnupg2 \
 	libssl-dev \
 	libssh2-1-dev \
+	unzip \
 	&& docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd \
 	&& docker-php-ext-configure intl \
 	&& docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype \
