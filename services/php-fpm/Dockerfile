@@ -32,7 +32,6 @@ RUN set -eux; \
 	opcache \
 	zip \
 	xml \
-	lsb-release \
 	# SSH2
 	&& pecl install -a ssh2-1.3.1 \
 	&& docker-php-ext-enable ssh2 \
@@ -40,13 +39,9 @@ RUN set -eux; \
 
 #SQL Server
 RUN set -eux; \
-	if ! [[ "18.04 20.04 22.04 23.04 24.04" == *"$(lsb_release -rs)"* ]]; then \
-	echo "Ubuntu $(lsb_release -rs) is not currently supported."; \
-	exit; \
-	fi; \
 	curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg
 
-RUN curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list | tee /etc/apt/sources.list.d/mssql-release.list
+RUN curl https://packages.microsoft.com/config/ubuntu/24.04/prod.list | tee /etc/apt/sources.list.d/mssql-release.list
 
 RUN apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql18 mssql-tools18 unixodbc-dev \
 	&& echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc
