@@ -207,28 +207,6 @@ services:
       - composer
       - tool
 
-  react:
-    container_name: react
-    build:
-      context: ./services/npm
-      args:
-        - NODE_VERSION=${NODE_VERSION}
-        - REACT_APP_NAME=${REACT_APP_NAME}
-    volumes:
-      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
-    ports:
-      - "${REACT_APP_PORT}:5173"
-    networks:
-      - frontend
-      - backend
-    working_dir: ${APP_CODE_PATH_CONTAINER}/${REACT_APP_NAME}
-    command: sh -c "npm run dev"
-    restart: unless-stopped
-    profiles:
-      - react
-      - prod
-      - frontend
-
   vite:
     container_name: vite
     build:
