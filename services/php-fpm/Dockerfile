@@ -39,10 +39,10 @@ RUN set -eux; \
 
 #SQL Server
 RUN set -eux; \ 
-	curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft.gpg; \
-	echo "deb [signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/ubuntu/24.04/prod noble main" > /etc/apt/sources.list.d/mssql-release.list; \
-	apt-get update; \
-	&& ACCEPT_EULA=Y apt-get install -y msodbcsql18  \
+	curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+	&& curl https://packages.microsoft.com/config/ubuntu/24.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+	&& apt-get update \
+	&& ACCEPT_EULA=Y apt-get install -y msodbcsql18 \
 	&& apt-get install -y unixodbc unixodbc-dev \
 	&& pecl install sqlsrv pdo_sqlsrv \
 	&& docker-php-ext-enable sqlsrv pdo_sqlsrv \
