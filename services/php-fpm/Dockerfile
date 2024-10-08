@@ -44,7 +44,7 @@ RUN set -eux; \
 	&& apt-get update \
 	&& ACCEPT_EULA=Y apt-get install -y \
 	msodbcsql18 \
-	mssql-tools18 \
+	mssql-tools \
 	unixodbc-dev \
 	&& pecl install sqlsrv pdo_sqlsrv \
 	&& docker-php-ext-enable sqlsrv pdo_sqlsrv \
