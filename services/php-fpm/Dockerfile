@@ -32,6 +32,8 @@ RUN set -eux; \
 	opcache \
 	zip \
 	xml \
+	unixodbc \
+    unixodbc-dev \
 	# SSH2
 	&& pecl install -a ssh2-1.3.1 \
 	&& docker-php-ext-enable ssh2 \
@@ -43,7 +45,6 @@ RUN set -eux; \
 	&& curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list \
 	&& apt-get update \
 	&& ACCEPT_EULA=Y apt-get install -y \
-	unixodbc-dev \
 	msodbcsql18 \
 	mssql-tools \
 	&& pecl install sqlsrv pdo_sqlsrv \
