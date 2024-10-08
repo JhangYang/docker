@@ -5,6 +5,7 @@ FROM php:${PHP_VERSION}-fpm
 RUN set -eux; \
 	apt-get update && apt-get install -y --no-install-recommends \
 	ca-certificates \
+	apt-transport-https \
 	build-essential \
 	libicu-dev \
 	zlib1g-dev \

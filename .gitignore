@@ -1,5 +1,5 @@
 .env
-.yml
+docker-compose.yml
 logs/*
 app/*
 data/*
