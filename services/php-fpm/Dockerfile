@@ -39,15 +39,18 @@ RUN set -eux; \
 
 #SQL Server
 RUN set -eux; \ 
-	curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o
+	curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/microsoft.gpg
 
-RUN curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list | tee /etc/apt/sources.list.d/mssql-release.list
+RUN curl https://packages.microsoft.com/config/ubuntu/24.04/prod.list | tee /etc/apt/sources.list.d/mssql-release.list
 
-RUN apt update && ACCEPT_EULA=Y apt-get install -y msodbcsql18 mssql-tools18 unixodbc-dev \
+RUN apt-get update && ACCEPT_EULA=Y apt-get install -y \
+	msodbcsql18 mssql-tools18 unixodbc-dev \
 	&& echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc \
-	&& source ~/.bashrc \
-	&& pecl install sqlsrv pdo_sqlsrv \
-	&& docker-php-ext-enable sqlsrv pdo_sqlsrv
+	&& source ~/.bashrc
+
+RUN pecl install sqlsrv pdo_sqlsrv \
+	&& docker-php-ext-enable sqlsrv pdo_sqlsrv \
+	&& apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
 # && curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
