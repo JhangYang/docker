@@ -8,7 +8,12 @@ if [ ! -f /etc/nginx/ssl/default.crt ]; then
 fi
 
 # Start crond in background
+# -l 2: 設定日誌級別為2(警告級別)
+# -b: 在背景執行crond
 crond -l 2 -b
+
+# Start SSL certificate watcher
+/bin/bash /opt/ssl_watcher.sh &
 
 # Start nginx in foreground
 nginx

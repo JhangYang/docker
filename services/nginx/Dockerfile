@@ -5,8 +5,7 @@ COPY nginx.conf /etc/nginx/
 RUN set -eux; \
     apk update \
     && apk --update add logrotate \
-    && apk add --no-cache openssl \
-    && apk add --no-cache bash \
+    && apk add --no-cache openssl inotify-tools bash \
     && rm -rf /var/cache/apk/*
 
 # Configure non-root user.
@@ -40,5 +39,9 @@ RUN echo "upstream php-upstream { server ${PHP_UPSTREAM_CONTAINER}:${PHP_UPSTREA
 # Add a auto-start schedule file
 ADD ./startup.sh /opt/startup.sh
 RUN sed -i 's/\r//g' /opt/startup.sh
+
+# Add SSL certificate watcher
+ADD ./ssl_watcher.sh /opt/ssl_watcher.sh
+RUN sed -i 's/\r//g' /opt/ssl_watcher.sh
 
 CMD ["/bin/bash", "/opt/startup.sh"]
