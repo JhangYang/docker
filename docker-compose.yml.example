@@ -280,6 +280,27 @@ services:
       - mailhog
       - tool
 
+  laravel-queue:
+    container_name: laravel-queue
+    build:
+      context: ./services/laravel
+      args:
+        - PHP_VERSION=${PHP_VERSION}
+        - PUSER=${PUSER}
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+      - ${LOG_PATH_HOST}/queue:/var/log/queue
+      - ./services/laravel/supervisord.d/laravel-queue.conf:/etc/supervisord.d/laravel-queue.conf
+      - ./services/laravel/supervisord.conf:/etc/supervisord.conf
+    networks:
+      - backend
+    extra_hosts:
+      - "dockerhost:${DOCKER_HOST_IP}"
+    restart: unless-stopped
+    profiles:
+      - laravel-queue
+      - laravel
+
   laravel-horizon:
     container_name: laravel-horizon
     build:
