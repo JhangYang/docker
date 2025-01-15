@@ -51,17 +51,6 @@ RUN pecl install sqlsrv pdo_sqlsrv \
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-# && curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
-# && apt-get update \
-# && ACCEPT_EULA=Y apt-get install -y \
-# msodbcsql18 \
-# mssql-tools18 \
-# unixodbc-dev \
-# && pecl install sqlsrv pdo_sqlsrv \
-# && docker-php-ext-enable sqlsrv pdo_sqlsrv \
-# && apt-get clean && rm -rf /var/lib/apt/lists/*
-
 COPY ./opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 COPY ./laravel.ini /usr/local/etc/php/conf.d
 COPY ./xlaravel.pool.conf /usr/local/etc/php-fpm.d/
