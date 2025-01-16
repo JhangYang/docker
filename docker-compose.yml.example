@@ -290,7 +290,7 @@ services:
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
       - ${LOG_PATH_HOST}/${APP_NAME}:/var/log/${APP_NAME}
-      - ./services/laravel/supervisord.d/laravel-horizon.conf:/etc/supervisord.d/laravel-horizon.conf
+      - ./services/laravel/supervisord.d:/etc/supervisord.d
       - ./services/laravel/supervisord.conf:/etc/supervisord.conf
     networks:
       - backend
@@ -313,7 +313,7 @@ services:
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
       - ${LOG_PATH_HOST}/${APP_NAME}:/var/log/${APP_NAME}
-      - ./services/laravel/supervisord.d/laravel-schedule.conf:/etc/supervisord.d/laravel-schedule.conf
+      - ./services/laravel/supervisord.d:/etc/supervisord.d
       - ./services/laravel/supervisord.conf:/etc/supervisord.conf
     networks:
       - backend
