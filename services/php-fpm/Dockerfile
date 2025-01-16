@@ -32,6 +32,7 @@ RUN set -eux; \
 	opcache \
 	zip \
 	xml \
+	pcntl \
 	# SSH2
 	&& pecl install -a ssh2-1.3.1 \
 	&& docker-php-ext-enable ssh2 \
