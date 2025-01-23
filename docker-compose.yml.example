@@ -55,11 +55,11 @@ services:
       - backend
       
   php-fpm:
-    image: php-fpm-${PHP_VERSION}
+    image: php-${PHP_VARIANT}-${PHP_VERSION}
     container_name: ${COMPOSE_PROJECT_NAME}-php
     build:
       context: ./services/php-fpm
-      dockerfile: ${PHP_DOCKERFILE}
+      dockerfile: ${PHP_VARIANT}.Dockerfile
       args:
         - PHP_VERSION=${PHP_VERSION}
         - PUSER=${PUSER}
@@ -167,14 +167,7 @@ services:
       - cache
 
   composer:
-    image: composer
-    build:
-      context: ./services/php-fpm
-      args:
-        - PHP_VERSION=${PHP_VERSION}
-        - PUSER=${PUSER}
-        - PUID=${PUID}
-        - PGID=${PGID}
+    image: composer:latest
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
     networks:
