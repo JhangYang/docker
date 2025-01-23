@@ -98,8 +98,6 @@ services:
       - "${MARIADB_PORT}:3306"
     networks:
       - database
-    depends_on:
-      - network-init
     restart: unless-stopped
     healthcheck:
       test:
