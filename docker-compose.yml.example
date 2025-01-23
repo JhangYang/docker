@@ -3,6 +3,9 @@ networks:
     driver: ${NETWORKS_DRIVER}
   backend:
     driver: ${NETWORKS_DRIVER}
+  database:
+    driver: ${NETWORKS_DRIVER}
+    name: "${PMA_DB_ENGINE}"
 
 volumes:
   mariadb:
@@ -14,7 +17,7 @@ volumes:
 
 services:
   nginx:
-    container_name: nginx
+    container_name: ${COMPOSE_PROJECT_NAME}-nginx
     build:
       context: ./services/nginx
       args:
@@ -48,39 +51,12 @@ services:
       - prod
       - frontend
       - backend
-
-  php-fpm-alpine:
-    container_name: php-alpine
-    build:
-      context: ./services/php-fpm/alpine
-      args:
-        - PHP_VERSION=${PHP_VERSION}
-        - PUSER=${PUSER}
-        - PUID=${PUID}
-        - PGID=${PGID}
-        - http_proxy
-        - https_proxy
-        - no_proxy
-    volumes:
-      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
-      - ./services/php-fpm/php${PHP_VERSION}.ini:/usr/local/etc/php/php.ini
-    expose:
-      - "9000"
-    networks:
-      - backend
-    extra_hosts:
-      - "dockerhost:${DOCKER_HOST_IP}"
-    restart: unless-stopped
-    profiles:
-      - php-fpm-alpine
-      - dev
-      - prod
-      - backend
-
+      
   php-fpm:
     container_name: php
     build:
       context: ./services/php-fpm
+      dockerfile: ${PHP_FPM_DOCKERFILE}
       args:
         - PHP_VERSION=${PHP_VERSION}
         - PUSER=${PUSER}
@@ -96,8 +72,6 @@ services:
       - "9000"
     networks:
       - backend
-    extra_hosts:
-      - "dockerhost:${DOCKER_HOST_IP}"
     restart: unless-stopped
     profiles:
       - php-fpm

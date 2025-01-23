@@ -6,6 +6,10 @@ ARG PUSER
 
 FROM node:${NODE_VERSION}-alpine
 
+RUN set -eux; \
+	apk --update --no-cache add \
+	openssl
+
 RUN mkdir -p /var/www/${FRONTEND_APP_NAME}
 
 WORKDIR /var/www/${FRONTEND_APP_NAME}
