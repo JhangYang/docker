@@ -197,6 +197,7 @@ services:
       - frontend
       - backend
     restart: unless-stopped
+    tty: true
     profiles:
       - dev
       - prod
