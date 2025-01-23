@@ -73,6 +73,7 @@ services:
       - "9000"
     networks:
       - backend
+      - database
     restart: unless-stopped
     profiles:
       - php-fpm
@@ -85,9 +86,6 @@ services:
     build:
       context: ./services/mariadb
       args:
-        - http_proxy
-        - https_proxy
-        - no_proxy
         - MARIADB_VERSION=${MARIADB_VERSION}
     volumes:
       - ${DATA_PATH_HOST}/mariadb:/var/lib/mysql
@@ -99,7 +97,7 @@ services:
     ports:
       - "${MARIADB_PORT}:3306"
     networks:
-      - backend
+      - database
     restart: unless-stopped
     healthcheck:
       test:
@@ -132,8 +130,7 @@ services:
     ports:
       - "${PMA_PORT}:80"
     networks:
-      - frontend
-      - backend
+      - database
     depends_on:
       - "${PMA_DB_ENGINE}"
     restart: unless-stopped
@@ -192,7 +189,7 @@ services:
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
     ports:
-      - "${FRONTEND_APP_PORT}:3000"
+      - "${FRONTEND_APP_PORT}:5173"
     networks:
       - frontend
       - backend
@@ -269,8 +266,7 @@ services:
       - ./services/laravel/supervisord.conf:/etc/supervisord.conf
     networks:
       - backend
-    extra_hosts:
-      - "dockerhost:${DOCKER_HOST_IP}"
+      - database
     depends_on:
       - php-fpm
     restart: unless-stopped
@@ -292,8 +288,7 @@ services:
       - ./services/laravel/supervisord.conf:/etc/supervisord.conf
     networks:
       - backend
-    extra_hosts:
-      - "dockerhost:${DOCKER_HOST_IP}"
+      - database
     depends_on:
       - php-fpm
     restart: unless-stopped
@@ -314,6 +309,7 @@ services:
     networks:
       - frontend
       - backend
+      - database
     restart: unless-stopped
     profiles:
       - laravel-echo
