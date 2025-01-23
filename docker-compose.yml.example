@@ -17,6 +17,14 @@ volumes:
     driver: ${VOLUMES_DRIVER}
 
 services:
+  network-init:
+    image: docker:latest
+    entrypoint: ["sh", "-c", "docker network ls | grep -w ${PMA_DB_ENGINE} || docker network create --driver ${NETWORKS_DRIVER} ${PMA_DB_ENGINE}"]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      replicas: 0
+
   nginx:
     container_name: ${COMPOSE_PROJECT_NAME}-nginx
     build:
