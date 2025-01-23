@@ -53,7 +53,7 @@ services:
       - backend
       
   php-fpm:
-    container_name: php
+    container_name: ${COMPOSE_PROJECT_NAME}-php
     build:
       context: ./services/php-fpm
       dockerfile: ${PHP_FPM_DOCKERFILE}
@@ -80,7 +80,7 @@ services:
       - backend
 
   mariadb:
-    container_name: mariadb
+    container_name: ${COMPOSE_PROJECT_NAME}-mariadb
     build:
       context: ./services/mariadb
       args:
@@ -117,7 +117,7 @@ services:
       - db
 
   phpmyadmin:
-    container_name: phpmyadmin
+    container_name: ${COMPOSE_PROJECT_NAME}-phpmyadmin
     build: ./services/phpmyadmin
     environment:
       - PMA_ARBITRARY=1
@@ -143,7 +143,7 @@ services:
       - db
 
   redis:
-    container_name: redis
+    container_name: ${COMPOSE_PROJECT_NAME}-redis
     build:
       context: ./services/redis
     ports:
@@ -182,7 +182,7 @@ services:
       - tool
 
   frontend:
-    container_name: frontend
+    container_name: ${COMPOSE_PROJECT_NAME}-frontend
     build:
       context: ./services/${FRONTEND_SERVICE}
       args:
@@ -204,7 +204,7 @@ services:
       - frontend
 
   vite:
-    container_name: vite
+    container_name: ${COMPOSE_PROJECT_NAME}-vite
     build:
       context: ./services/npm
       args:
@@ -224,7 +224,7 @@ services:
       - tool
 
   npm:
-    container_name: npm
+    container_name: ${COMPOSE_PROJECT_NAME}-npm
     build:
       context: ./services/npm
       args:
@@ -240,7 +240,7 @@ services:
       - tool
 
   mailhog:
-    container_name: mailhog
+    container_name: ${COMPOSE_PROJECT_NAME}-mailhog
     build: ./services/mailhog
     ports:
       - "1025:1025"
@@ -255,7 +255,7 @@ services:
       - tool
 
   laravel-horizon:
-    container_name: laravel-horizon
+    container_name: ${COMPOSE_PROJECT_NAME}-laravel-horizon
     build:
       context: ./services/laravel
       args:
@@ -278,7 +278,7 @@ services:
       - laravel
 
   laravel-schedule:
-    container_name: laravel-schedule
+    container_name: ${COMPOSE_PROJECT_NAME}-laravel-schedule
     build:
       context: ./services/laravel
       args:
@@ -301,7 +301,7 @@ services:
       - laravel
 
   laravel-echo-server:
-    container_name: laravel-echo
+    container_name: ${COMPOSE_PROJECT_NAME}-laravel-echo
     build:
       context: ./services/laravel/echo-server
     volumes:
