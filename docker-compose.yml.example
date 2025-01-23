@@ -18,6 +18,7 @@ volumes:
 
 services:
   nginx:
+    image: nginx
     container_name: ${COMPOSE_PROJECT_NAME}-nginx
     build:
       context: ./services/nginx
@@ -54,6 +55,7 @@ services:
       - backend
       
   php-fpm:
+    image: php-fpm-${PHP_VERSION}
     container_name: ${COMPOSE_PROJECT_NAME}-php
     build:
       context: ./services/php-fpm
@@ -82,6 +84,7 @@ services:
       - backend
 
   mariadb:
+    image: mariadb
     container_name: ${COMPOSE_PROJECT_NAME}-mariadb
     build:
       context: ./services/mariadb
@@ -116,6 +119,7 @@ services:
       - db
 
   phpmyadmin:
+    image: phpmyadmin
     container_name: ${COMPOSE_PROJECT_NAME}-phpmyadmin
     build: ./services/phpmyadmin
     environment:
@@ -141,6 +145,7 @@ services:
       - db
 
   redis:
+    image: redis
     container_name: ${COMPOSE_PROJECT_NAME}-redis
     build:
       context: ./services/redis
@@ -162,6 +167,7 @@ services:
       - cache
 
   composer:
+    image: composer
     build:
       context: ./services/php-fpm
       args:
@@ -180,6 +186,7 @@ services:
       - tool
 
   frontend:
+    image: frontend
     container_name: ${COMPOSE_PROJECT_NAME}-frontend
     build:
       context: ./services/${FRONTEND_SERVICE}
@@ -202,6 +209,7 @@ services:
       - frontend
 
   vite:
+    image: vite
     container_name: ${COMPOSE_PROJECT_NAME}-vite
     build:
       context: ./services/npm
@@ -222,6 +230,7 @@ services:
       - tool
 
   npm:
+    image: npm
     container_name: ${COMPOSE_PROJECT_NAME}-npm
     build:
       context: ./services/npm
@@ -238,6 +247,7 @@ services:
       - tool
 
   mailhog:
+    image: mailhog
     container_name: ${COMPOSE_PROJECT_NAME}-mailhog
     build: ./services/mailhog
     ports:
@@ -253,6 +263,7 @@ services:
       - tool
 
   laravel-horizon:
+    image: laravel-horizon
     container_name: ${COMPOSE_PROJECT_NAME}-laravel-horizon
     build:
       context: ./services/laravel
@@ -275,6 +286,7 @@ services:
       - laravel
 
   laravel-schedule:
+    image: laravel-schedule
     container_name: ${COMPOSE_PROJECT_NAME}-laravel-schedule
     build:
       context: ./services/laravel
@@ -297,6 +309,7 @@ services:
       - laravel
 
   laravel-echo-server:
+    image: laravel-echo-server
     container_name: ${COMPOSE_PROJECT_NAME}-laravel-echo
     build:
       context: ./services/laravel/echo-server
