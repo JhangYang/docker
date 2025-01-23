@@ -195,7 +195,7 @@ services:
       - "${FRONTEND_APP_PORT}:5173"
     networks:
       - frontend
-      - backend
+      - database
     restart: unless-stopped
     tty: true
     profiles:
