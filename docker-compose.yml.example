@@ -6,6 +6,7 @@ networks:
   database:
     driver: ${NETWORKS_DRIVER}
     name: "${PMA_DB_ENGINE}"
+    external: true
 
 volumes:
   mariadb:

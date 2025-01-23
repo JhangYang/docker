@@ -5,7 +5,6 @@
  - mariadb: {version=latest}
  - phpmyadmin
  - redis: alpine
- - react: {version=current}-alpine
 ##### For tool
  - composer: from the same as `php-fpm`
  - npm: {version=current}-alpine
