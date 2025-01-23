@@ -186,6 +186,9 @@ services:
       args:
         - NODE_VERSION=${NODE_VERSION}
         - FRONTEND_APP_NAME=${FRONTEND_APP_NAME}
+        - PUSER=${PUSER}
+        - PUID=${PUID}
+        - PGID=${PGID}
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
     ports:
@@ -193,8 +196,6 @@ services:
     networks:
       - frontend
       - backend
-    working_dir: ${APP_CODE_PATH_CONTAINER}/${FRONTEND_APP_NAME}
-    command: sh -c "npm run dev"
     restart: unless-stopped
     profiles:
       - dev
