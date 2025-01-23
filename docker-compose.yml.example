@@ -57,7 +57,7 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}-php
     build:
       context: ./services/php-fpm
-      dockerfile: ${PHP_FPM_DOCKERFILE}
+      dockerfile: ${PHP_DOCKERFILE}
       args:
         - PHP_VERSION=${PHP_VERSION}
         - PUSER=${PUSER}
