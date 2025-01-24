@@ -5,39 +5,23 @@ FROM php:${PHP_VERSION}-fpm
 RUN set -eux; \
 	apt-get update && apt-get install -y --no-install-recommends \
 	ca-certificates \
+	autoconf \
 	supervisor \
 	apt-transport-https \
 	build-essential \
-	libicu-dev \
-	zlib1g-dev \
+	gnupg2 \
 	libzip-dev \
 	libxml2-dev \
-	libjpeg-dev \
-	libpng-dev \
-	libwebp-dev \
-	libfreetype6-dev \
-	autoconf \
-	gnupg2 \
-	libssl-dev \
-	libssh2-1-dev \
-	unzip \
-	&& docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd \
+	unzip;
+
+RUN docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd \
 	&& docker-php-ext-configure intl \
-	&& docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype \
-	&& docker-php-ext-install gd \
 	&& docker-php-ext-configure zip \
 	&& docker-php-ext-install \
 	pdo_mysql \
 	bcmath \
-	intl \
-	opcache \
 	zip \
-	xml \
-	pcntl \
-	# SSH2
-	&& pecl install -a ssh2-1.3.1 \
-	&& docker-php-ext-enable ssh2 \
-	&& rm -rf /var/lib/apt/lists/*
+	xml;
 
 #SQL Server
 RUN set -eux; \
