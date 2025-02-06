@@ -23,6 +23,6 @@ RUN set -x; \
 	addgroup -g ${PGID} -S ${PUSER} || true; \
 	adduser -u ${PUID} -D -S -G ${PUSER} -s /bin/sh ${PUSER} || true
 
-EXPOSE 5173
+EXPOSE 5173 4173
 
 CMD ["sh"]
