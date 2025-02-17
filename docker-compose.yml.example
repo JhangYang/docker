@@ -6,7 +6,9 @@ networks:
   database:
     driver: ${NETWORKS_DRIVER}
     name: "${PMA_DB_ENGINE}"
-    external: true
+    external: ${NETWORKS_DATABASE_EXNTERNAL}
+  logging:
+    driver: ${NETWORKS_DRIVER}
 
 volumes:
   mariadb:
@@ -14,6 +16,8 @@ volumes:
   phpmyadmin:
     driver: ${VOLUMES_DRIVER}
   redis:
+    driver: ${VOLUMES_DRIVER}
+  grafana:
     driver: ${VOLUMES_DRIVER}
 
 services:
@@ -182,27 +186,59 @@ services:
     image: frontend
     container_name: ${COMPOSE_PROJECT_NAME}-frontend
     build:
-      context: ./services/${FRONTEND_SERVICE}
+      context: ${FRONTEND_DOCKERFILE}
+      target: ${FRONTEND_ENV_MODE}
       args:
         - NODE_VERSION=${NODE_VERSION}
         - FRONTEND_APP_NAME=${FRONTEND_APP_NAME}
-        - PUSER=${PUSER}
-        - PUID=${PUID}
-        - PGID=${PGID}
     volumes:
       - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
     ports:
-      - "${FRONTEND_APP_PORT}:5173"
+      - "${FRONTEND_APP_PORT}:3000"
       - "${FRONTEND_TEST_PORT}:4173"
     networks:
       - frontend
       - database
+      - logging
     restart: unless-stopped
     tty: true
     profiles:
       - dev
       - prod
       - frontend
+
+  loki:
+    image: loki
+    container_name: ${COMPOSE_PROJECT_NAME}-loki
+    build:
+      context: ./services/loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ${LOG_PATH_HOST}/loki:/loki
+    networks:
+      - logging
+    restart: unless-stopped
+    profiles:
+      - loki
+      - tool
+
+  grafana:
+    image: grafana
+    container_name: ${COMPOSE_PROJECT_NAME}-grafana
+    build:
+      context: ./services/grafana
+    ports:
+      - "3001:3001"
+    volumes:
+      - ${DATA_PATH_HOST}/grafana:/var/lib/grafana
+    depends_on:
+      - loki
+    networks:
+      - logging
+    profiles:
+      - grafana
+      - tool
 
   vite:
     image: vite

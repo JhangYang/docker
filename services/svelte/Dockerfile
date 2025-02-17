@@ -1,28 +1,45 @@
-ARG NODE_VERSION
+ARG NODE_VERSION=current
 ARG FRONTEND_APP_NAME=frontend
-ARG PGID
-ARG PUID
-ARG PUSER
+ARG FRONTEND_DIRECTORY
 
-FROM node:${NODE_VERSION}-alpine
+# Builder
+FROM node:${NODE_VERSION}-alpine AS builder
 
-RUN set -eux; \
-	apk --update --no-cache add \
-	openssl \
-	curl;
+WORKDIR /app
 
-RUN mkdir -p /var/www/${FRONTEND_APP_NAME}
+COPY ${FRONTEND_DIRECTORY} .
 
-WORKDIR /var/www/${FRONTEND_APP_NAME}
+RUN npm install
 
-ENV PUID ${PUID}
-ENV PGID ${PGID}
-ENV PUSER ${PUSER}
+RUN cp .env.example .env
 
-RUN set -x; \
-	addgroup -g ${PGID} -S ${PUSER} || true; \
-	adduser -u ${PUID} -D -S -G ${PUSER} -s /bin/sh ${PUSER} || true
+RUN npm run build
 
-EXPOSE 5173 4173
 
-CMD ["sh"]
+# Dev
+FROM node:${NODE_VERSION}-alpine AS dev
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
+CMD ["npm", "run", "dev"]
+
+
+# Prod
+FROM node:${NODE_VERSION}-alpine AS prod
+
+WORKDIR /app
+
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/build ./build
+COPY --from=builder /app/src ./src
+COPY --from=builder /app/.env ./env
+
+RUN npm install --only=production
+
+CMD ["node", "--env-file=.env", "build"]
