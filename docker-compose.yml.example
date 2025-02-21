@@ -190,9 +190,8 @@ services:
       target: ${FRONTEND_ENV_MODE}
       args:
         - NODE_VERSION=${NODE_VERSION}
-        - FRONTEND_APP_NAME=${FRONTEND_APP_NAME}
     volumes:
-      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+      - ${APP_CODE_PATH_HOST}/${FRONTEND_APP_NAME}:/app${APP_CODE_CONTAINER_FLAG}
     ports:
       - "${FRONTEND_APP_PORT}:5173"
       - "${FRONTEND_TEST_PORT}:4173"
@@ -254,8 +253,8 @@ services:
     networks:
       - frontend
     working_dir: ${APP_CODE_PATH_CONTAINER}/${APP_NAME}
-    command: sh -c "npm install -D tailwindcss postcss autoprefixer @tailwindcss/forms tailwind-scrollbar prettier prettier-plugin-tailwindcss @shufo/prettier-plugin-blade && npx tailwindcss init -p && npm run dev"
     restart: unless-stopped
+    tty: true
     profiles:
       - vite
       - dev

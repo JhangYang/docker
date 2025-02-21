@@ -26,6 +26,7 @@ RUN set -eux; \
 	pdo_mysql \
 	bcmath \
 	intl \
+	pcntl \
 	opcache \
 	zip \
 	xml \
