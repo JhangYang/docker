@@ -1,4 +1,5 @@
 ARG PHP_VERSION
+
 FROM php:${PHP_VERSION}-alpine
 
 RUN apk --update add wget \
@@ -18,22 +19,18 @@ RUN apk --update add wget \
     apk --update add openssl-dev;
 
 
-RUN pecl channel-update pecl.php.net; \
-    docker-php-ext-install mysqli mbstring pdo pdo_mysql xml pcntl; \
-    docker-php-ext-install tokenizer; \
-    docker-php-ext-install bcmath; \
-    docker-php-ext-install sockets; \
-    docker-php-ext-configure zip --with-libzip;
+RUN pecl channel-update pecl.php.net;
+
+RUN docker-php-ext-install mysqli mbstring pdo pdo_mysql xml pcntl bcmath;
 
 # Add a non-root user to help install ffmpeg:
 ARG PUID=1000
-ENV PUID ${PUID}
 ARG PGID=1000
-ENV PGID ${PGID}
-
 ARG PUSER=www-data
-RUN addgroup -g ${PGID} ${PUSER} && \
-    adduser -D -G ${PUSER} -u ${PUID} ${PUSER}
+
+RUN set -x; \
+    addgroup -g ${PGID} -S ${PUSER} || true; \
+    adduser -u ${PUID} -D -S -G ${PUSER} -s /bin/sh ${PUSER} || true
 
 RUN rm /var/cache/apk/* \
     && mkdir -p /var/www
